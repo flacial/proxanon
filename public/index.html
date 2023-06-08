@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Proxanon</title>
+
+<body>
+    <div id="app">
+        <button>Get your location geohash</button>
+        <p></p>
+    </div>
+    <script>
+        let newUser = localStorage.getItem('isNewUser');
+
+        document.querySelector('button').addEventListener('click', () => {
+            if (!newUser) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    fetch('/api/initial', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            lat,
+                            lon
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const { hash, username } = data;
+                            document.querySelector('p').innerHTML = `Your geohash is ${hash} and your username is ${username}`;
+
+                            // Save the info that the user is not new to local storage
+                            localStorage.setItem('isNewUser', true);
+                            newUser = true;
+                        })
+                });
+            }
+        })
+
+
+    </script>
+
+</html>
