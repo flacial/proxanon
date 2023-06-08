@@ -19,7 +19,7 @@ app.use(express.static("public"));
 app.post("/api/initial", (req, res) => {
   const { lat, lon } = req.body;
   // geohash of length 5 is <= 4.89km X 4.89km
-  const hash = geohash.encode(lat, lon).slice(0, 5);
+  const hash = geohash.encode(lat, lon, 5);
 
   const randomName = uniqueNamesGenerator({
     dictionaries: [adjectives, colors, animals],
