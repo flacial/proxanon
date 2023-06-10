@@ -1,4 +1,3 @@
-import express from "express";
 import geohash from "ngeohash";
 import {
   uniqueNamesGenerator,
@@ -6,40 +5,54 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
+import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
 /**
  * @type {Object.<string, Set>}
  */
 const grids = {};
-const app = express();
 
 app.use(express.json());
 app.use(express.static("public"));
 
-app.post("/api/initial", (req, res) => {
-  const { lat, lon } = req.body;
-  // geohash of length 5 is <= 4.89km X 4.89km
-  const hash = geohash.encode(lat, lon, 5);
+io.on("connection", (socket) => {
+  const handleSignin = (args) => {
+    const { lat, lon } = args || {};
 
-  const randomName = uniqueNamesGenerator({
-    dictionaries: [adjectives, colors, animals],
-    separator: "-",
-  }); // big-red-donkey
+    if (!lat || !lon) {
+      return;
+    }
 
-  let grid = grids[hash];
+    const hash = geohash.encode(lat, lon, 5);
 
-  if (!grid) {
-    grids[hash] = new Set();
-    grid = grids[hash];
-  }
+    const randomName = uniqueNamesGenerator({
+      dictionaries: [adjectives, colors, animals],
+      separator: "-",
+    }); // big-red-donkey
 
-  grid.add({
-    randomName,
-  });
+    let grid = grids[hash];
 
-  res.status(200).send({ hash, username: randomName });
+    if (!grid) {
+      grids[hash] = new Set();
+      grid = grids[hash];
+    }
+
+    grid.add({
+      randomName,
+    });
+
+    socket.emit("signin", { hash, username: randomName });
+  };
+
+  socket.on("signin", handleSignin);
 });
 
-app.listen(3000, () => {
+httpServer.listen(3000, () => {
   console.log("Example app listening on port 3000");
 });
