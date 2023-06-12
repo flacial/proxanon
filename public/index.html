@@ -10,23 +10,36 @@
   <div id="app">
     <button>Get your location geohash</button>
     <p></p>
+    <ul></ul>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const text = document.querySelector("p");
     const btn = document.querySelector("button");
+    const ul = document.querySelector('ul');
 
-    let userHash = localStorage.getItem("userHash");
+    let user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    if (userHash) {
-      text.innerHTML = `Your geohash is ${userHash}`;
+    if (user?.hash) {
+      text.innerHTML = `Your geohash is ${user.hash}`;
       btn.disabled = true;
       btn.innerText = "You are already signed in";
     }
 
+    const displayUserInfo =
+      (hash, username) => {
+        if (hash && username) {
+          text.innerHTML = `Your geohash is ${hash} and your username is ${username}`;
+        }
+      }
+
+    displayUserInfo(user?.hash, user?.username)
+
+
     const socket = io({
       query: {
-        hash: userHash,
+        hash: user?.hash,
+        username: user?.username,
       }
     });
 
@@ -34,16 +47,27 @@
     socket.on("signin", (data) => {
       const { hash, username } = data;
 
-      text.innerHTML = `Your geohash is ${hash} and your username is ${username}`;
+      displayUserInfo(hash, username)
 
       // Save the user hash in the local storage so that the user doesn't have to sign in again
-      localStorage.setItem("userHash", hash);
+      localStorage.setItem("user", JSON.stringify({
+        hash,
+        username,
+      }));
 
-      userHash = hash;
+      user = { hash, username };
     })
 
-    document.querySelector("button").addEventListener("click", () => {
-      if (userHash) return
+    socket.on("users", (users) => {
+      const mapUsersToLi = users.map((user) => {
+        return `<li>${user.username} is at ${user.hash}</li>`;
+      });
+
+      ul.innerHTML = mapUsersToLi.join("");
+    })
+
+    btn.addEventListener("click", () => {
+      if (user?.hash) return
 
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
