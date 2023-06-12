@@ -34,7 +34,6 @@ export const handleSignin = (socket, grids, finalCallback) => (args) => {
   });
 
   socket.emit("signin", { hash, username: randomName });
-  socket.join(hash);
 
   finalCallback?.({ hash, username: randomName });
 };
