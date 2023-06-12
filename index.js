@@ -38,7 +38,7 @@ io.on("connection", (socket) => {
       socket.join(hash);
 
       // Send all users in the grid to the newly connected user
-      io.to(userHash).emit("users", [...grids[userHash]]);
+      io.to(hash).emit("users", [...grids[userHash]]);
     })
   );
 });
