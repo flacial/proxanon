@@ -11,39 +11,50 @@
     <button>Get your location geohash</button>
     <p></p>
   </div>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    let newUser = localStorage.getItem("isNewUser");
+    const text = document.querySelector("p");
+    const btn = document.querySelector("button");
+
+    let userHash = localStorage.getItem("userHash");
+
+    if (userHash) {
+      text.innerHTML = `Your geohash is ${userHash}`;
+      btn.disabled = true;
+      btn.innerText = "You are already signed in";
+    }
+
+    const socket = io({
+      query: {
+        hash: userHash,
+      }
+    });
+
+    // Listen for the signin event from the server and display the user hash
+    socket.on("signin", (data) => {
+      const { hash, username } = data;
+
+      text.innerHTML = `Your geohash is ${hash} and your username is ${username}`;
+
+      // Save the user hash in the local storage so that the user doesn't have to sign in again
+      localStorage.setItem("userHash", hash);
+
+      userHash = hash;
+    })
 
     document.querySelector("button").addEventListener("click", () => {
-      if (newUser) return
+      if (userHash) return
 
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
 
-        fetch("/api/initial", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            lat,
-            lon,
-          }),
+        // Signin the user by emitting the signin event to the server with the user's location data (lat, lon)
+        socket.emit("signin", {
+          lat,
+          lon,
         })
-          .then((response) => response.json())
-          .then((data) => {
-            const { hash, username } = data;
-            document.querySelector(
-              "p"
-            ).innerHTML = `Your geohash is ${hash} and your username is ${username}`;
-
-            // Save the info that the user is not new to local storage
-            localStorage.setItem("isNewUser", true);
-            newUser = true;
-          });
       });
-
     });
   </script>
 </body>
