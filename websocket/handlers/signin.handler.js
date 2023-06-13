@@ -6,7 +6,7 @@ import {
   animals,
 } from "unique-names-generator";
 
-export const handleSignin = (socket, grids, finalCallback) => (args) => {
+export const handleSignin = (io, socket, grids) => (args) => {
   const { lat, lon } = args || {};
 
   if (!lat || !lon) {
@@ -35,5 +35,9 @@ export const handleSignin = (socket, grids, finalCallback) => (args) => {
 
   socket.emit("signin", { hash, username: randomName });
 
-  finalCallback?.({ hash, username: randomName });
+  // Join the user to the room[hash]
+  socket.join(hash);
+
+  // Send a list of users in room[hash] to all connected clients in that room
+  io.to(hash).emit("users", [...grids[hash]]);
 };

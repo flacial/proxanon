@@ -16,30 +16,20 @@ app.use(express.json());
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-  let { hash: userHash } = socket.handshake.query;
+  // hash is the geohash of the user's location
+  let { hash } = socket.handshake.query;
 
-  if (userHash) {
+  if (hash) {
     // Join the user to the grid
-    socket.join(userHash);
+    socket.join(hash);
 
-    // Send a list of all users in the grid to everyone in the room[grid]
-    if (grids[userHash]) {
-      io.to(userHash).emit("users", [...grids[userHash]]);
+    if (grids[hash]) {
+      // Send a list of users in room[hash] to all connected clients in that room
+      io.to(hash).emit("users", [...grids[hash]]);
     }
   }
 
-  socket.on(
-    "signin",
-    handleSignin(socket, grids, (result) => {
-      const { hash: userHash } = result || {};
-
-      // Join the user to the grid
-      socket.join(userHash);
-
-      // Send all users in the grid to the newly connected user
-      io.to(userHash).emit("users", [...grids[userHash]]);
-    })
-  );
+  socket.on("signin", handleSignin(io, socket, grids));
 });
 
 httpServer.listen(3000, () => {
