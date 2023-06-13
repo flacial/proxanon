@@ -17,7 +17,7 @@ app.use(express.static("public"));
 
 io.on("connection", (socket) => {
   // hash is the geohash of the user's location
-  let { hash } = socket.handshake.query;
+  const { hash } = socket.handshake.query;
 
   if (hash) {
     // Join the user to the grid
