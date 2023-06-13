@@ -22,7 +22,7 @@ io.on("connection", (socket) => {
     // Join the user to the grid
     socket.join(userHash);
 
-    // Send all users in the grid to the newly connected user
+    // Send a list of all users in the grid to everyone in the room[grid]
     if (grids[userHash]) {
       io.to(userHash).emit("users", [...grids[userHash]]);
     }
@@ -31,14 +31,13 @@ io.on("connection", (socket) => {
   socket.on(
     "signin",
     handleSignin(socket, grids, (result) => {
-      const { hash } = result || {};
-      userHash = hash;
+      const { hash: userHash } = result || {};
 
       // Join the user to the grid
-      socket.join(hash);
+      socket.join(userHash);
 
       // Send all users in the grid to the newly connected user
-      io.to(hash).emit("users", [...grids[userHash]]);
+      io.to(userHash).emit("users", [...grids[userHash]]);
     })
   );
 });
