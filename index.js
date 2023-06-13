@@ -1,13 +1,7 @@
-import geohash from "ngeohash";
-import {
-  uniqueNamesGenerator,
-  adjectives,
-  colors,
-  animals,
-} from "unique-names-generator";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { handleSignin } from "./websocket/handlers/signin.handler.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -22,35 +16,20 @@ app.use(express.json());
 app.use(express.static("public"));
 
 io.on("connection", (socket) => {
-  const handleSignin = (args) => {
-    const { lat, lon } = args || {};
+  // hash is the geohash of the user's location
+  const { hash } = socket.handshake.query;
 
-    if (!lat || !lon) {
-      return;
+  if (hash) {
+    // Join the user to the grid
+    socket.join(hash);
+
+    if (grids[hash]) {
+      // Send a list of users in room[hash] to all connected clients in that room
+      io.to(hash).emit("users", [...grids[hash]]);
     }
+  }
 
-    const hash = geohash.encode(lat, lon, 5);
-
-    const randomName = uniqueNamesGenerator({
-      dictionaries: [adjectives, colors, animals],
-      separator: "-",
-    }); // big-red-donkey
-
-    let grid = grids[hash];
-
-    if (!grid) {
-      grids[hash] = new Set();
-      grid = grids[hash];
-    }
-
-    grid.add({
-      randomName,
-    });
-
-    socket.emit("signin", { hash, username: randomName });
-  };
-
-  socket.on("signin", handleSignin);
+  socket.on("signin", handleSignin(io, socket, grids));
 });
 
 httpServer.listen(3000, () => {
