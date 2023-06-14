@@ -9,6 +9,7 @@
 <body>
   <div id="app">
     <button>Get your location geohash</button>
+    <button class="clear">Clear localStorage</button>
     <p></p>
     <ul></ul>
   </div>
@@ -60,7 +61,7 @@
 
     socket.on("users", (users) => {
       const mapUsersToLi = users.map((user) => {
-        return `<li>${user.username} is at ${user.hash}</li>`;
+        return `<li>${user.username} is at ${user.hash} and is ${user.online ? "online" : "offline"}</li>`;
       });
 
       ul.innerHTML = mapUsersToLi.join("");
@@ -79,6 +80,10 @@
           lon,
         })
       });
+    });
+    document.querySelector(".clear").addEventListener("click", () => {
+      localStorage.clear();
+      location.reload();
     });
   </script>
 </body>

@@ -30,7 +30,7 @@ export const handleSignin = (io, socket, grids) => (args) => {
   grid.add({
     username: randomName,
     hash,
-    status: true,
+    online: true,
   });
 
   socket.emit("signin", { hash, username: randomName });
