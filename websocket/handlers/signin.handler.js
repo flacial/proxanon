@@ -27,11 +27,11 @@ export const handleSignin = (io, socket, grids) => (args) => {
     grid = grids[hash];
   }
 
-  grid.add({
+  const newUser = {
     username: randomName,
     hash,
-    online: true,
-  });
+  };
+  grid.add(newUser);
 
   socket.emit("signin", { hash, username: randomName });
 
@@ -40,4 +40,6 @@ export const handleSignin = (io, socket, grids) => (args) => {
 
   // Send a list of users in room[hash] to all connected clients in that room
   io.to(hash).emit("users", [...grids[hash]]);
+
+  return newUser;
 };
