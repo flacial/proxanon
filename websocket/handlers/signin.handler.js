@@ -14,11 +14,11 @@ export const handleSignin = (io, socket, grids) => (args) => {
   }
 
   const hash = geohash.encode(lat, lon, 5);
-
   const randomName = uniqueNamesGenerator({
     dictionaries: [adjectives, colors, animals],
     separator: "-",
   }); // big-red-donkey
+  const newUser = { hash, username: randomName };
 
   let grid = grids[hash];
 
@@ -27,13 +27,9 @@ export const handleSignin = (io, socket, grids) => (args) => {
     grid = grids[hash];
   }
 
-  const newUser = {
-    username: randomName,
-    hash,
-  };
-  grid.add(newUser);
+  grid.add(randomName);
 
-  socket.emit("signin", { hash, username: randomName });
+  socket.emit("signin", newUser);
 
   // Join the user to the room[hash]
   socket.join(hash);

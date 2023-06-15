@@ -20,17 +20,16 @@ io.on("connection", (socket) => {
   let { hash, username } = socket.handshake.query;
 
   if (hash) {
+    const grid = grids[hash];
+
     // Join the user to the grid
     socket.join(hash);
 
-    if (grids[hash]) {
-      grids[hash].add({
-        username,
-        hash,
-      });
+    if (grid) {
+      grid.add(username);
 
       // Send a list of users in room[hash] to all connected clients in that room
-      io.to(hash).emit("users", [...grids[hash]]);
+      io.to(hash).emit("users", [...grid]);
     }
   }
 
@@ -48,19 +47,12 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    const grid = grids[hash];
+
     // Remove the disconnected user from the grid
-    if (grids[hash]) {
-      const gridsSetToArray = Array.from(grids[hash]);
-      const user = gridsSetToArray.findIndex(
-        (user) => user.username === username
-      );
-
-      if (user !== -1) {
-        gridsSetToArray.splice(user, 1);
-        grids[hash] = new Set(gridsSetToArray);
-      }
-
-      io.to(hash).emit("users", [...grids[hash]]);
+    if (grid) {
+      grid.delete(username);
+      io.to(hash).emit("users", [...grid]);
     }
   });
 });
