@@ -17,19 +17,44 @@ app.use(express.static("public"));
 
 io.on("connection", (socket) => {
   // hash is the geohash of the user's location
-  const { hash } = socket.handshake.query;
+  let { hash, username } = socket.handshake.query;
 
   if (hash) {
+    const grid = grids[hash];
+
     // Join the user to the grid
     socket.join(hash);
 
-    if (grids[hash]) {
+    if (grid) {
+      grid.add(username);
+
       // Send a list of users in room[hash] to all connected clients in that room
-      io.to(hash).emit("users", [...grids[hash]]);
+      io.to(hash).emit("users", [...grid]);
     }
   }
 
-  socket.on("signin", handleSignin(io, socket, grids));
+  socket.on("signin", (args) => {
+    const { hash: newHash, username: newUsername } = handleSignin(
+      io,
+      socket,
+      grids
+    )(args);
+
+    // Update parent context's hash & username values
+    // by doing so, the other event handlers can use the updated values
+    hash = newHash;
+    username = newUsername;
+  });
+
+  socket.on("disconnect", () => {
+    const grid = grids[hash];
+
+    // Remove the disconnected user from the grid
+    if (grid) {
+      grid.delete(username);
+      io.to(hash).emit("users", [...grid]);
+    }
+  });
 });
 
 httpServer.listen(3000, () => {
