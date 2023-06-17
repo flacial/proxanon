@@ -5,7 +5,11 @@ import { handleSignin } from "./websocket/handlers/signin.handler.js";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
 
 /**
  * @type {Object.<string, Set>}
