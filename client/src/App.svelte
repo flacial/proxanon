@@ -2,8 +2,8 @@
   import { onMount } from 'svelte'
   import io, { Socket } from 'socket.io-client'
 
-  let users = []
-  let user: { hash: string; username: string } = JSON.parse(
+  let users: string[] = []
+  let user: { hash?: string; username?: string } = JSON.parse(
     localStorage.getItem('user') || '{}'
   )
   let message = ''
@@ -22,9 +22,7 @@
   }
 
   onMount(() => {
-    if (user) {
-      message = displayUserInfo()
-    }
+    message = displayUserInfo()
 
     socket = io('http://localhost:3000', {
       query: {
@@ -84,11 +82,9 @@
   <p>{message}</p>
   <ul>
     {#each users as proxuser}
-      {#if proxuser}
-        <li>
-          {proxuser} is at {user.hash}
-        </li>
-      {/if}
+      <li>
+        {proxuser} is at {user.hash}
+      </li>
     {/each}
   </ul>
 </div>
