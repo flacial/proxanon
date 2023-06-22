@@ -5,8 +5,10 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
+import { addUser } from "../../utils/userActions.js";
+import { grids } from "../../state/index.js";
 
-export const handleSignin = (io, socket, grids) => (args) => {
+export const handleSignin = (io, socket) => (args) => {
   const { lat, lon } = args || {};
 
   if (!lat || !lon) {
@@ -27,7 +29,7 @@ export const handleSignin = (io, socket, grids) => (args) => {
     grid = grids[hash];
   }
 
-  grid.add(randomName);
+  addUser(grid, newUser.username, socket.id);
 
   socket.emit("signin", newUser);
 

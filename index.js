@@ -2,6 +2,8 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { handleSignin } from "./websocket/handlers/signin.handler.js";
+import { addUser, removeUser, getSocketId } from "./utils/userActions.js";
+import { grids } from "./state/index.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -10,11 +12,6 @@ const io = new Server(httpServer, {
     origin: "*",
   },
 });
-
-/**
- * @type {Object.<string, Set>}
- */
-const grids = {};
 
 app.use(express.json());
 app.use(express.static("public"));
@@ -30,7 +27,7 @@ io.on("connection", (socket) => {
     socket.join(hash);
 
     if (grid) {
-      grid.add(username);
+      addUser(grid, username, socket.id);
 
       // Send a list of users in room[hash] to all connected clients in that room
       io.to(hash).emit("users", [...grid]);
@@ -55,9 +52,20 @@ io.on("connection", (socket) => {
 
     // Remove the disconnected user from the grid
     if (grid) {
-      grid.delete(username);
+      removeUser(grid, username);
       io.to(hash).emit("users", [...grid]);
     }
+  });
+
+  socket.on("chat", (args) => {
+    const { message, to, from } = args;
+    const receiverSocketId = getSocketId(to);
+
+    // Send the message to the user
+    socket.to(receiverSocketId).emit("chat", {
+      from,
+      message,
+    });
   });
 });
 
