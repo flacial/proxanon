@@ -57,16 +57,11 @@
     socket.on('chat', (data) => {
       const { from, message } = data
 
-      chats = {
-        ...chats,
-        [from]: [
-          ...chats[from],
-          {
-            content: message,
-            owner: from,
-          },
-        ],
-      }
+      chats[from].push({
+        content: message,
+        owner: from,
+      })
+      chats = chats
     })
   })
 
@@ -100,16 +95,11 @@
         from: user.username,
       })
 
-      chats = {
-        ...chats,
-        [chattingWith]: [
-          ...chats[chattingWith],
-          {
-            content: input.value,
-            owner: user.username,
-          },
-        ],
-      }
+      chats[chattingWith].push({
+        content: input.value,
+        owner: user.username,
+      })
+      chats = chats
 
       input.value = ''
     }
