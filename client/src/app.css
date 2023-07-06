@@ -1,7 +1,58 @@
 @tailwind base;
+
+/* extending the base layer */
+@layer base {
+  /* https://www.joshwcomeau.com/css/custom-css-reset/ */
+  /*
+  1. Use a more-intuitive box-sizing model.
+*/
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  /*
+  Typographic tweaks!
+  3. Add accessible line-height
+  4. Improve text rendering
+*/
+  body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+  7. Avoid text overflows
+*/
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  button {
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-family: inherit;
+    cursor: pointer;
+  }
+}
 @tailwind components;
 @tailwind utilities;
 
+/* App fonts */
 @font-face {
   font-family: "Proxima Nova";
   font-style: normal;
@@ -9,7 +60,6 @@
   font-display: swap;
   src: url("./assets/fonts/proximanovaexcn-regular.otf") format("opentype");
 }
-
 @font-face {
   font-family: "Proxima Nova";
   font-style: normal;
@@ -17,7 +67,6 @@
   font-display: swap;
   src: url("./assets/fonts/proximanovaexcn-medium.otf") format("opentype");
 }
-
 @font-face {
   font-family: "Proxima Nova";
   font-style: normal;
@@ -25,7 +74,6 @@
   font-display: swap;
   src: url("./assets/fonts/proximanovaexcn-bold.otf") format("opentype");
 }
-
 @font-face {
   font-family: "AgencyFB";
   font-style: normal;
@@ -41,73 +89,7 @@
   background-color: #191919;
 }
 
-button {
-  border-radius: 6px;
-  border: 1px solid transparent;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-/* https://www.joshwcomeau.com/css/custom-css-reset/ */
-/*
-  1. Use a more-intuitive box-sizing model.
-*/
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-/*
-  2. Remove default margin
-*/
-* {
-  margin: 0;
-}
-/*
-  Typographic tweaks!
-  3. Add accessible line-height
-  4. Improve text rendering
-*/
-body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-/*
-  5. Improve media defaults
-*/
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
-}
-/*
-  6. Remove built-in form typography styles
-*/
-input,
-button,
-textarea,
-select {
-  font: inherit;
-}
-/*
-  7. Avoid text overflows
-*/
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  overflow-wrap: break-word;
-}
-/*
-  8. Create a root stacking context
-*/
-#root,
-#__next {
-  isolation: isolate;
+/* Global classes */
+.orange-gradient {
+  background-image: linear-gradient(180deg, #ff5000 0%, #ff3500 100%);
 }
