@@ -2,6 +2,7 @@
   import './app.css'
   import { onMount } from 'svelte'
   import io, { Socket } from 'socket.io-client'
+  import Login from './view/Login.svelte'
 
   let users: string[] = []
   let chats: { [key: string]: { content: string; owner: string }[] } = {}
@@ -108,7 +109,9 @@
 </script>
 
 <div>
-  {#if chattingWith}
+  {#if !user?.hash}
+    <Login />
+  {:else if chattingWith}
     <div>
       <ul class="chat">
         {#each chats[chattingWith] as message}
@@ -131,7 +134,7 @@
           {proxuser}
           is at {user.hash}
           <button
-            class="chat--btn"
+            class="ml-5"
             on:click={() => {
               chattingWith = proxuser
 
@@ -143,14 +146,3 @@
     </ul>
   {/if}
 </div>
-
-<style>
-  .chat--btn {
-    margin-left: 20px;
-  }
-
-  .chat {
-    list-style: none;
-    padding: 0;
-  }
-</style>
