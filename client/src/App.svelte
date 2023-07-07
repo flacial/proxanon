@@ -134,7 +134,7 @@
           {proxuser}
           is at {user.hash}
           <button
-            class="chat--btn"
+            class="ml-5"
             on:click={() => {
               chattingWith = proxuser
 
@@ -146,9 +146,3 @@
     </ul>
   {/if}
 </div>
-
-<style>
-  .chat--btn {
-    margin-left: 20px;
-  }
-</style>
