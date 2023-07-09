@@ -3,6 +3,7 @@
   import { onMount } from 'svelte'
   import io, { Socket } from 'socket.io-client'
   import Login from './view/Login.svelte'
+  import Home from './view/Home/Home.svelte'
 
   let users: string[] = []
   let chats: { [key: string]: { content: string; owner: string }[] } = {}
@@ -108,7 +109,7 @@
   }
 </script>
 
-<div>
+<div class="h-screen">
   {#if !user?.hash}
     <Login />
   {:else if chattingWith}
@@ -123,7 +124,9 @@
       <input type="text" on:keydown={handleMessageSend} />
     </div>
   {:else}
-    <button disabled={!!user?.hash} on:click={handleSignIn}
+    <Home />
+    <!-- I didn't decide yet what I want to do with the following code -->
+    <!-- <button disabled={!!user?.hash} on:click={handleSignIn}
       >{user?.hash ? 'You are signed in' : 'Get your location geohash'}</button
     >
     <button on:click={handleClearStorage}>Clear localStorage</button>
@@ -143,6 +146,6 @@
           >
         </li>
       {/each}
-    </ul>
+    </ul> -->
   {/if}
 </div>
