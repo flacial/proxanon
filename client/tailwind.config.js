@@ -8,6 +8,7 @@ export default {
         gray: "#E2E2E2",
         darkGray: "#C2C2C2",
         blackGray: "#191919",
+        secondaryGray: "#343434",
       },
       fontFamily: {
         display: ["AgencyFB", "sans-serif"],
