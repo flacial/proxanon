@@ -1,16 +1,13 @@
 <script lang="ts">
   import '../app.css'
+  import Binoculars from '../lib/assets/icons/binoculars.svg'
 </script>
 
 <main class="main flex flex-col items-center">
   <span class="text-gray font-display text-6xl">Proxanon</span>
   <div class="mb-8">
     <span>Chat anonymously in</span>
-    <img
-      class="inline"
-      src="/src/assets/icons/binoculars.svg"
-      alt="binoculars icon"
-    />
+    <img class="inline" src={Binoculars} alt="binoculars icon" />
     <span>proximity</span>
   </div>
   <button

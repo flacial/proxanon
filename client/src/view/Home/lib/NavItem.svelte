@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let imageName: string = ''
+  export let imgSrc: string = ''
   export let alt: string = ''
   export let active: boolean = false
   export let onClick: () => void = () => {}
@@ -19,7 +19,7 @@
   >
     <img
       class="filter brightness-75"
-      src={`/src/assets/icons/${imageName}`}
+      src={imgSrc}
       {alt}
       width="31"
       height="31"

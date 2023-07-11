@@ -1,20 +1,23 @@
 <script lang="ts">
   import { NavItemType } from '../type/nav'
   import NavItem from './NavItem.svelte'
+  import AgentImage from '../../../lib/assets/icons/agent.png'
+  import ChatImage from '../../../lib/assets/icons/friend.png'
+  import PostImage from '../../../lib/assets/icons/inbox.png'
 
   export let activeNavItem: NavItemType
 
   const navItems = Object.freeze([
     {
-      imageName: 'agent.png',
+      src: AgentImage,
       alt: NavItemType.Setting,
     },
     {
-      imageName: 'friend.png',
+      src: ChatImage,
       alt: NavItemType.Chat,
     },
     {
-      imageName: 'inbox.png',
+      src: PostImage,
       alt: NavItemType.Post,
     },
   ])
@@ -29,7 +32,7 @@
   <div class="grid gap-5">
     {#each navItems as navItem}
       <NavItem
-        imageName={navItem.imageName}
+        imgSrc={navItem.src}
         alt={navItem.alt}
         active={activeNavItem === navItem.alt}
         onClick={handleOnClick(navItem.alt)}
