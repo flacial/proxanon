@@ -3,15 +3,14 @@
   import Navbar from './lib/Navbar.svelte'
   import { NavItemType } from './type/nav'
 
-  const toUpperCase = (str: string) =>
-    str.charAt(0).toUpperCase() + str.slice(1)
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
-  const initialPath = toUpperCase(window.location.pathname.split('/')[1])
+  const initialPath = capitalize(window.location.pathname.split('/')[1])
 
   let activeNavItem: NavItemType = NavItemType[initialPath] || NavItemType.Chat
 
   const handlePopState = () => {
-    const newPath = toUpperCase(window.location.pathname.split('/')[1])
+    const newPath = capitalize(window.location.pathname.split('/')[1])
     activeNavItem = NavItemType[newPath] || NavItemType.Chat
   }
 
