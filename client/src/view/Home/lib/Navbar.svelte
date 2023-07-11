@@ -1,22 +1,28 @@
 <script lang="ts">
+  import { NavItemType } from '../type/nav'
   import NavItem from './NavItem.svelte'
 
-  export let activeNavItem: string = ''
+  export let activeNavItem: NavItemType
 
   const navItems = Object.freeze([
     {
       imageName: 'agent.png',
-      alt: 'setting',
+      alt: NavItemType.Setting,
     },
     {
       imageName: 'friend.png',
-      alt: 'chat',
+      alt: NavItemType.Chat,
     },
     {
       imageName: 'inbox.png',
-      alt: 'post',
+      alt: NavItemType.Post,
     },
   ])
+
+  const handleOnClick = (navItem: NavItemType) => () => {
+    activeNavItem = navItem
+    history.pushState(null, '', `/${navItem}`)
+  }
 </script>
 
 <nav class="min-h-screen bg-[#202020] w-max px-4 grid items-center">
@@ -26,7 +32,7 @@
         imageName={navItem.imageName}
         alt={navItem.alt}
         active={activeNavItem === navItem.alt}
-        onClick={() => {}}
+        onClick={handleOnClick(navItem.alt)}
       />
     {/each}
   </div>

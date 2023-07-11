@@ -12,6 +12,10 @@
   const socket = getSocket(user)
 
   onMount(() => {
+    if (!user.hash) {
+      history.pushState(null, '', '/login')
+    }
+
     // Listen for the signin event from the server and display the user hash
     socket.on('signin', (data: SigninEvArgs) => {
       const { hash, username } = data
