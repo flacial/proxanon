@@ -27,6 +27,10 @@
   }
 
   onMount(() => {
+    if (!user.hash) {
+      history.pushState(null, '', '/login')
+    }
+
     message = displayUserInfo()
 
     socket = io('http://localhost:3000', {
