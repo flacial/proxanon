@@ -3,7 +3,7 @@ export type User = {
   username?: string;
 };
 
-export type Users = string[];
+export type UserHashes = string[];
 
 export type ChatEventArgs = {
   message: string;
