@@ -7,14 +7,10 @@
 <div>
   <div class="flex justify-between">
     <span class="font-display text-2xl text-gray">Nearby Users</span>
-    <Button class="bg-secondaryGray rounded-full h-fit w-fit p-[3px]">
-      <img
-        class="filter sepia-[100%] hue-rotate-[271deg] saturate-[6000%]"
-        src={HelpImage}
-        alt="help"
-        width="21"
-        height="21"
-      />
+    <Button
+      class="bg-purple-500 filter bg-opacity-20 rounded-full h-fit w-fit p-[3px]"
+    >
+      <img src={HelpImage} alt="help" width="21" height="21" />
     </Button>
   </div>
 </div>
@@ -36,7 +32,7 @@
         <StatusDot type="green" />
       </div>
     </div>
-    <div class="flex justify-between">
+    <div class="flex justify-between gap-2">
       <!-- Username and Chatbutton -->
       <span class="font-body font-bold text-sm text-gray filter brightness-90"
         >Awesome Red Hog</span
