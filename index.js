@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -9,12 +10,15 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: process.env.CLIENT_URL || "*",
   },
 });
 
 app.use(express.json());
-app.use(express.static("public"));
+
+app.get("/", (_, res) => {
+  res.send("<h3>Stay anonymous</h3>");
+});
 
 io.on("connection", (socket) => {
   // hash is the geohash of the user's location

@@ -15,6 +15,7 @@
     "unique-names-generator": "^4.7.1"
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "eslint": "^8.42.0",
     "nodemon": "^2.0.22",
     "prettier": "2.8.8"
