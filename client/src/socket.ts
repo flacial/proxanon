@@ -7,12 +7,15 @@ let socket = null;
 
 export const getSocket = (user: User): Socket => {
   if (!socket) {
-    socket = io("http://localhost:3000", {
-      query: {
-        hash: user?.hash,
-        username: user?.username,
-      },
-    });
+    socket = io(
+      import.meta.env.VITE_WEBSOCKET_ENDPOINT || "http://localhost:3000",
+      {
+        query: {
+          hash: user?.hash,
+          username: user?.username,
+        },
+      }
+    );
   }
   return socket;
 };
