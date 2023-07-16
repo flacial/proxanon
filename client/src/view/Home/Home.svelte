@@ -26,7 +26,7 @@
 
 <div class="grid grid-cols-[auto,1fr]">
   <Navbar bind:activeNavItem />
-  <div class="bg-[#262626] p-10 flex flex-col gap-6 max-h-[100dvh]">
+  <div class="bg-[#262626] flex flex-col gap-6 max-h-[100dvh]">
     {#if activeNavItem === NavItemType.Chat}
       <Chat />
     {:else if activeNavItem === NavItemType.Post}
