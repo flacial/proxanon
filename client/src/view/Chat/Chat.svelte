@@ -22,7 +22,7 @@
   })
 </script>
 
-<section class={`h-full ${!chattingWith ? 'p-10' : ''}`}>
+<section class="h-full" class:p-10={!chattingWith}>
   {#if chattingWith}
     <ChatView {chattingWith} {chats} />
   {:else}
