@@ -5,16 +5,13 @@
   import Home from './view/Home/Home.svelte'
   import { getSocket } from './socket'
   import type { SigninEvArgs } from './type/global'
+  import { getUser } from './utils/userdata'
 
-  let user: { hash?: string; username?: string } = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  )
+  let user = getUser()
   const socket = getSocket(user)
 
   onMount(() => {
-    if (!user.hash) {
-      history.pushState(null, '', '/login')
-    }
+    history.pushState(null, '', !user.hash ? '/login' : '/chat')
 
     // Listen for the signin event from the server and display the user hash
     socket.on('signin', (data: SigninEvArgs) => {
