@@ -1,6 +1,7 @@
 <script lang="ts">
   import HelpImage from '../../lib/assets/icons/help.png'
   import Button from '../../lib/components/Button.svelte'
+  import { parseUsername } from '../../utils/parse'
   import { getUser } from '../../utils/userdata'
   import UserCard from './lib/UserCard.svelte'
 
@@ -25,7 +26,7 @@
     {#each gridUsers as username}
       {#if username !== user.username}
         <UserCard
-          username={username.replaceAll('-', ' ')}
+          username={parseUsername(username)}
           onStartChat={() => (chattingWith = username)}
         />
       {/if}
