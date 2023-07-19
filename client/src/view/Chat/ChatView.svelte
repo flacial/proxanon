@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte'
+  import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte'
   import { getSocket } from '../../socket'
   import { getUser } from '../../utils/userdata'
   import { parseUsername } from '../../utils/parse'
@@ -12,6 +12,23 @@
 
   let messageContent: string = ''
   let messagesListElement: HTMLUListElement
+  let autoscroll: boolean
+
+  beforeUpdate(() => {
+    autoscroll =
+      messagesListElement &&
+      messagesListElement.offsetHeight + messagesListElement.scrollTop >
+        messagesListElement.scrollHeight - 20
+  })
+  afterUpdate(() => {
+    if (autoscroll) {
+      scrollToBottomMessageList()
+    }
+  })
+
+  const scrollToBottomMessageList = () => {
+    messagesListElement.scrollTo(0, messagesListElement.scrollHeight)
+  }
 
   const addMessageToChat = ({ owner, to, content }) => {
     chats[to] = chats[to] ?? []
@@ -29,10 +46,6 @@
       message: messageContent,
       from: user.username,
     })
-
-    // TODO: I need to find a way to dynamically get the new scrollHeight without
-    // using DOM methods
-    // messagesListElement.scrollTo(0, messagesListElement.scrollHeight)
 
     addMessageToChat({
       to: chattingWith,
@@ -56,7 +69,10 @@
     chats = chats
   }
 
-  onMount(() => socket.on('chat', handleChatEvent))
+  onMount(() => {
+    socket.on('chat', handleChatEvent)
+    scrollToBottomMessageList()
+  })
   onDestroy(() => socket.off('chat', handleChatEvent))
 </script>
 
