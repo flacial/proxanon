@@ -66,6 +66,8 @@
       owner: from,
     })
 
+    autoscroll && scrollToBottomMessageList()
+
     chats = chats
   }
 
