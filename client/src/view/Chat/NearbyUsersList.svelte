@@ -1,17 +1,15 @@
 <script lang="ts">
   import HelpImage from '../../lib/assets/icons/help.png'
+  import EmptyBox from '../../lib/assets/icons/empty-box.png'
   import Button from '../../lib/components/Button.svelte'
   import { parseUsername } from '../../utils/parse'
-  import { getUser } from '../../utils/userdata'
   import UserCard from './lib/UserCard.svelte'
-
-  const user = getUser()
 
   export let gridUsers: string[] = []
   export let chattingWith: string = ''
 </script>
 
-<div class="grid gap-6">
+<div class="grid gap-6" class:gap-24={!gridUsers.length}>
   <div>
     <div class="flex justify-between">
       <span class="font-display text-2xl text-gray">Nearby Users</span>
@@ -23,13 +21,20 @@
     </div>
   </div>
   <div class="grid gap-4 overflow-auto max-h-[100dvh]">
+    {#if !gridUsers.length}
+      <div class="grid gap-4 justify-items-center">
+        <img src={EmptyBox} alt="empty box" class="max-h-40" />
+        <span class="text-xl text-red-300 font-display text-center block">
+          <span>No users are currently online</span>
+          <span>Check later!</span>
+        </span>
+      </div>
+    {/if}
     {#each gridUsers as username}
-      {#if username !== user.username}
-        <UserCard
-          username={parseUsername(username)}
-          onStartChat={() => (chattingWith = username)}
-        />
-      {/if}
+      <UserCard
+        username={parseUsername(username)}
+        onStartChat={() => (chattingWith = username)}
+      />
     {/each}
   </div>
 </div>
