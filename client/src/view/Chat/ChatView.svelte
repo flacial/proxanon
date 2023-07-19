@@ -1,14 +1,15 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte'
   import { getSocket } from '../../socket'
-  import { getUser } from '../../utils/userdata'
+  import { getUser, storeMessage } from '../../utils/userdata'
   import { parseUsername } from '../../utils/parse'
+  import type { Chats } from '../../type/global'
 
   const user = getUser()
   const socket = getSocket(null)
 
   export let chattingWith: string = ''
-  export let chats: { [key: string]: { content: string; owner: string }[] } = {}
+  export let chats: Chats = {}
 
   let messageContent: string = ''
   let messagesListElement: HTMLUListElement
@@ -39,6 +40,10 @@
       content: messageContent,
       owner: user.username,
     })
+    storeMessage(chattingWith, {
+      owner: user.username,
+      content: messageContent,
+    })
 
     chats = chats
     messageContent = ''
@@ -46,12 +51,16 @@
 
   const handleChatEvent = (data: { from: string; message: string }) => {
     const { from, message } = data
-
-    addMessageToChat({
-      to: chattingWith,
+    const messageBody = {
       content: message,
       owner: from,
+    }
+
+    addMessageToChat({
+      ...messageBody,
+      to: chattingWith,
     })
+    storeMessage(chattingWith, messageBody)
 
     chats = chats
   }

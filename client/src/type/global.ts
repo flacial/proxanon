@@ -3,6 +3,12 @@ export type User = {
   username?: string;
 };
 
+export type Message = { content: string; owner: string };
+export type Chat = Message[];
+export type Chats = {
+  [key: string]: Chat;
+};
+
 export type UserHashes = string[];
 
 export type ChatEventArgs = {
