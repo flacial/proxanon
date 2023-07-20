@@ -4,6 +4,7 @@
   import ChatView from './ChatView.svelte'
   import NearbyUsersList from './NearbyUsersList.svelte'
   import { getUser } from '../../utils/userdata'
+  import { getChats } from '../../utils/userdata'
 
   const socket = getSocket(null)
 
@@ -17,6 +18,7 @@
 
   onMount(() => {
     socket.on('users', handleUesrs)
+    chats = getChats()
   })
   onDestroy(() => {
     socket.off('users', handleUesrs)

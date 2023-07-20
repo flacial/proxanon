@@ -1,17 +1,35 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte'
+  import { afterUpdate, beforeUpdate, onDestroy, onMount } from 'svelte'
   import { getSocket } from '../../socket'
-  import { getUser } from '../../utils/userdata'
+  import { getUser, storeMessage } from '../../utils/userdata'
   import { parseUsername } from '../../utils/parse'
+  import type { Chats } from '../../type/global'
 
   const user = getUser()
   const socket = getSocket(null)
 
   export let chattingWith: string = ''
-  export let chats: { [key: string]: { content: string; owner: string }[] } = {}
+  export let chats: Chats = {}
 
   let messageContent: string = ''
   let messagesListElement: HTMLUListElement
+  let autoscroll: boolean
+
+  beforeUpdate(() => {
+    autoscroll =
+      messagesListElement &&
+      messagesListElement.offsetHeight + messagesListElement.scrollTop >
+        messagesListElement.scrollHeight - 20
+  })
+  afterUpdate(() => {
+    if (autoscroll) {
+      scrollToBottomMessageList()
+    }
+  })
+
+  const scrollToBottomMessageList = () => {
+    messagesListElement.scrollTo(0, messagesListElement.scrollHeight)
+  }
 
   const addMessageToChat = ({ owner, to, content }) => {
     chats[to] = chats[to] ?? []
@@ -30,14 +48,14 @@
       from: user.username,
     })
 
-    // TODO: I need to find a way to dynamically get the new scrollHeight without
-    // using DOM methods
-    // messagesListElement.scrollTo(0, messagesListElement.scrollHeight)
-
     addMessageToChat({
       to: chattingWith,
       content: messageContent,
       owner: user.username,
+    })
+    storeMessage(chattingWith, {
+      owner: user.username,
+      content: messageContent,
     })
 
     chats = chats
@@ -46,17 +64,26 @@
 
   const handleChatEvent = (data: { from: string; message: string }) => {
     const { from, message } = data
-
-    addMessageToChat({
-      to: chattingWith,
+    const messageBody = {
       content: message,
       owner: from,
+    }
+
+    addMessageToChat({
+      ...messageBody,
+      to: chattingWith,
     })
+    storeMessage(chattingWith, messageBody)
+
+    autoscroll && scrollToBottomMessageList()
 
     chats = chats
   }
 
-  onMount(() => socket.on('chat', handleChatEvent))
+  onMount(() => {
+    socket.on('chat', handleChatEvent)
+    scrollToBottomMessageList()
+  })
   onDestroy(() => socket.off('chat', handleChatEvent))
 </script>
 
@@ -74,15 +101,17 @@
       <li>
         {#if message.owner === user.username}
           <li class="bg-[#3D271F] px-3 py-1">
-            <span class="font-display text-darkGray text-sm"
+            <span class="font-display text-darkGray text-xs"
               >{parseUsername(user.username)}</span
             >
-            <p>{message.content}</p>
+            <p class="text-sm">{message.content}</p>
           </li>
         {:else}
           <li class="bg-secondaryGray px-3 py-1">
-            <span>{parseUsername(chattingWith)}</span>
-            <p>{message.content}</p>
+            <span class="font-display text-darkGray text-xs">
+              {parseUsername(chattingWith)}</span
+            >
+            <p class="text-sm">{message.content}</p>
           </li>
         {/if}
       </li>
@@ -90,7 +119,7 @@
   </ul>
   <div class="mt-auto">
     <input
-      class="w-full p-3 bg-secondaryGray outline-none placeholder:text-sm placeholder:text-ellipsis placeholder:h-full"
+      class="w-full p-3 bg-secondaryGray outline-none text-sm placeholder:text-sm placeholder:text-ellipsis placeholder:h-full"
       placeholder="Write a message..."
       bind:value={messageContent}
       on:keydown={sendMessage}
