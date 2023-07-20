@@ -4,6 +4,10 @@
   import Navbar from './lib/Navbar.svelte'
   import Chat from '../Chat/Chat.svelte'
 
+  let gridUsers: string[] = []
+  let chats: { [key: string]: { content: string; owner: string }[] } = {}
+  let chattingWith: string = ''
+
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
   const initialPath = capitalize(window.location.pathname.split('/')[1])
@@ -28,7 +32,7 @@
   <Navbar bind:activeNavItem />
   <div class="bg-[#262626] flex flex-col gap-6 max-h-[100dvh]">
     {#if activeNavItem === NavItemType.Chat}
-      <Chat />
+      <Chat bind:gridUsers bind:chats bind:chattingWith />
     {:else if activeNavItem === NavItemType.Post}
       <h1>Post</h1>
     {:else if activeNavItem === NavItemType.Setting}

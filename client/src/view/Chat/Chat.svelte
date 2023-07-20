@@ -3,16 +3,17 @@
   import { getSocket } from '../../socket'
   import ChatView from './ChatView.svelte'
   import NearbyUsersList from './NearbyUsersList.svelte'
+  import { getUser } from '../../utils/userdata'
   import { getChats } from '../../utils/userdata'
 
   const socket = getSocket(null)
 
-  let gridUsers: string[] = []
-  let chattingWith: string = ''
-  let chats: { [key: string]: { content: string; owner: string }[] } = {}
+  export let gridUsers: string[] = []
+  export let chats: { [key: string]: { content: string; owner: string }[] } = {}
+  export let chattingWith: string = ''
 
   const handleUesrs = (usersList: string[]) => {
-    gridUsers = usersList
+    gridUsers = usersList.filter((user) => user !== getUser().username)
   }
 
   onMount(() => {
