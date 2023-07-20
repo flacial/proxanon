@@ -63,21 +63,14 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./lib/assets/fonts/proximanovaexcn-regular.otf") format("opentype");
-}
-@font-face {
-  font-family: "Proxima Nova";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("./lib/assets/fonts/proximanovaexcn-medium.otf") format("opentype");
+  src: url("./lib/assets/fonts/proximanova-cond.otf") format("opentype");
 }
 @font-face {
   font-family: "Proxima Nova";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("./lib/assets/fonts/proximanovaexcn-bold.otf") format("opentype");
+  src: url("./lib/assets/fonts/proximanova-cond-bold.otf") format("opentype");
 }
 @font-face {
   font-family: "AgencyFB";
