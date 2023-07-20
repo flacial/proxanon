@@ -9,7 +9,7 @@
   export let chattingWith: string = ''
 </script>
 
-<div class="grid gap-6" class:gap-24={!gridUsers.length}>
+<div class:gap-24={!gridUsers.length} class="grid gap-6">
   <div>
     <div class="flex justify-between">
       <span class="font-display text-2xl text-gray">Nearby Users</span>
