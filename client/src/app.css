@@ -63,7 +63,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./lib/assets/fonts/proximanova-cond.otf") format("opentype");
+  src: url("./lib/assets/fonts/proximanova-cond-regular.otf") format("opentype");
 }
 @font-face {
   font-family: "Proxima Nova";
