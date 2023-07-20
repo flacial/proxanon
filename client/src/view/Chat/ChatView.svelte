@@ -92,15 +92,17 @@
       <li>
         {#if message.owner === user.username}
           <li class="bg-[#3D271F] px-3 py-1">
-            <span class="font-display text-darkGray text-sm"
+            <span class="font-display text-darkGray text-xs"
               >{parseUsername(user.username)}</span
             >
-            <p>{message.content}</p>
+            <p class="text-sm">{message.content}</p>
           </li>
         {:else}
           <li class="bg-secondaryGray px-3 py-1">
-            <span>{parseUsername(chattingWith)}</span>
-            <p>{message.content}</p>
+            <span class="font-display text-darkGray text-xs">
+              {parseUsername(chattingWith)}</span
+            >
+            <p class="text-sm">{message.content}</p>
           </li>
         {/if}
       </li>
@@ -108,7 +110,7 @@
   </ul>
   <div class="mt-auto">
     <input
-      class="w-full p-3 bg-secondaryGray outline-none placeholder:text-sm placeholder:text-ellipsis placeholder:h-full"
+      class="w-full p-3 bg-secondaryGray outline-none text-sm placeholder:text-sm placeholder:text-ellipsis placeholder:h-full"
       placeholder="Write a message..."
       bind:value={messageContent}
       on:keydown={sendMessage}

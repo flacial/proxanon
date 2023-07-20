@@ -22,7 +22,7 @@
     </div>
   </div> -->
   <div class="flex justify-between gap-2">
-    <span class="font-body font-bold text-sm text-gray filter brightness-90"
+    <span class="font-display font-bold text-xs text-gray filter brightness-90"
       >{username}</span
     >
     <Button
