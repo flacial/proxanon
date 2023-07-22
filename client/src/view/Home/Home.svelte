@@ -3,6 +3,7 @@
   import { NavItemType } from './type/nav'
   import Navbar from './lib/Navbar.svelte'
   import Chat from '../Chat/Chat.svelte'
+  import { getGridUsers, getUser } from '../../utils/userdata'
 
   let gridUsers: string[] = []
   let chats: { [key: string]: { content: string; owner: string }[] } = {}
@@ -20,6 +21,8 @@
   }
 
   onMount(() => {
+    const localGridUsers = getGridUsers()
+    gridUsers = localGridUsers.filter((user) => user !== getUser().username)
     window.addEventListener('popstate', handlePopState)
   })
 
