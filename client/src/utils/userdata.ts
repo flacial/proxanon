@@ -5,10 +5,15 @@ import type { Chats, Message, User } from "../type/global";
 enum Key {
   Chat = "chat",
   User = "user",
+  GridUsers = "gridUsers",
 }
 
+const getLocalKey = (key: Key, defaultValue?: string) => {
+  return JSON.parse(localStorage.getItem(key) || defaultValue || "{}");
+};
+
 export const getChats = () => {
-  return JSON.parse(localStorage.getItem(Key.Chat) || "{}");
+  return getLocalKey(Key.Chat);
 };
 
 export const initChat = (chats: Chats, chatName: string): Chats => {
@@ -25,7 +30,7 @@ const updateLocalKey = (item: Key, value: unknown) => {
 };
 
 export const getUser: () => User = () => {
-  return JSON.parse(localStorage.getItem(Key.User) || "{}");
+  return getLocalKey(Key.User);
 };
 
 export const storeMessage = (chatName: string, message: Message) => {
@@ -41,4 +46,44 @@ export const storeMessage = (chatName: string, message: Message) => {
   updateLocalKey(Key.Chat, chats);
 
   return chat;
+};
+
+export const getGridUsers = (): string[] => {
+  let gridUsers = getLocalKey(Key.GridUsers, "[]");
+
+  if (!gridUsers.length) {
+    updateLocalKey(Key.GridUsers, []);
+  }
+
+  return gridUsers;
+};
+
+const getSetDiff = (setA: Set<string>, setB: Set<string>): Set<string> => {
+  const diffSet = new Set<string>();
+
+  setA.forEach((el) => {
+    if (!setB.has(el)) {
+      diffSet.add(el);
+    }
+  });
+
+  return diffSet;
+};
+
+export const storeGridUsers = (newGridUsers: string[]) => {
+  const localGridUsers = new Set(getGridUsers());
+  const gridUsersSet = new Set(newGridUsers);
+
+  // TODO: update user status <status dots>
+  // const offlineUsers = getSetDiff(localGridUsers, gridUsersSet);
+  const newUsers = getSetDiff(gridUsersSet, localGridUsers);
+
+  newUsers.forEach((user) => {
+    localGridUsers.add(user);
+  });
+
+  const localGridUsersArray = [...localGridUsers];
+  updateLocalKey(Key.GridUsers, localGridUsersArray);
+
+  return localGridUsersArray;
 };
