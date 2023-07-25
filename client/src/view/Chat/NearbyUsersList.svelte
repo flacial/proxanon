@@ -4,12 +4,16 @@
   import Button from '../../lib/components/Button.svelte'
   import { parseUsername } from '../../utils/parse'
   import UserCard from './lib/UserCard.svelte'
+  import { getChats } from '../../utils/userdata'
 
   export let gridUsers: string[] = []
   export let chattingWith: string = ''
+  const previousChats = Object.keys(getChats())
 </script>
 
-<div class="grid {!gridUsers.length ? 'gap-24' : 'gap-6'}">
+<div
+  class="grid {!gridUsers.length && !previousChats.length ? 'gap-24' : 'gap-6'}"
+>
   <div>
     <div class="flex justify-between">
       <span class="font-display text-2xl text-gray">Nearby Users</span>
@@ -20,7 +24,30 @@
       </Button>
     </div>
   </div>
-  <div class="grid gap-4 overflow-auto max-h-[100dvh]">
+  <div class="grid overflow-auto max-h-[100dvh]">
+    <div class="grid gap-4">
+      {#each previousChats as username}
+        <UserCard
+          username={parseUsername(username)}
+          onStartChat={() => (chattingWith = username)}
+        />
+      {/each}
+    </div>
+    {#if previousChats.length}
+      <hr
+        class="w-2/3 border-t-2 opacity-40 rounded-t rounded-b
+   m-auto my-6 text-darkGray"
+      />
+    {/if}
+    <div class="grid gap-4">
+      {#each gridUsers as username}
+        <UserCard
+          username={parseUsername(username)}
+          onStartChat={() => (chattingWith = username)}
+        />
+      {/each}
+    </div>
+
     {#if !gridUsers.length}
       <div class="grid gap-4 justify-items-center">
         <img src={EmptyBox} alt="empty box" class="max-h-40" />
@@ -30,11 +57,5 @@
         </span>
       </div>
     {/if}
-    {#each gridUsers as username}
-      <UserCard
-        username={parseUsername(username)}
-        onStartChat={() => (chattingWith = username)}
-      />
-    {/each}
   </div>
 </div>

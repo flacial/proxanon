@@ -3,7 +3,7 @@
   import { getSocket } from '../../socket'
   import ChatView from './ChatView.svelte'
   import NearbyUsersList from './NearbyUsersList.svelte'
-  import { getUser, storeGridUsers } from '../../utils/userdata'
+  import { getUser } from '../../utils/userdata'
   import { getChats } from '../../utils/userdata'
 
   const socket = getSocket(null)
@@ -13,8 +13,11 @@
   export let chattingWith: string = ''
 
   const handleUesrs = (usersList: string[]) => {
-    const storedGridUsers = storeGridUsers(usersList)
-    gridUsers = storedGridUsers.filter((user) => user !== getUser().username)
+    const previousChats = Object.keys(getChats())
+    const filterPreviousChats = usersList.filter((user) => {
+      return !previousChats.includes(user) && user !== getUser().username
+    })
+    gridUsers = filterPreviousChats
   }
 
   onMount(() => {
