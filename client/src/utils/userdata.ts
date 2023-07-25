@@ -12,7 +12,7 @@ const getLocalKey = (key: Key, defaultValue?: string) => {
   return JSON.parse(localStorage.getItem(key) || defaultValue || "{}");
 };
 
-export const getChats = () => {
+export const getChats = (): Chats => {
   return getLocalKey(Key.Chat);
 };
 
@@ -49,41 +49,11 @@ export const storeMessage = (chatName: string, message: Message) => {
 };
 
 export const getGridUsers = (): string[] => {
-  let gridUsers = getLocalKey(Key.GridUsers, "[]");
+  const gridUsers = getLocalKey(Key.GridUsers, "[]");
 
   if (!gridUsers.length) {
     updateLocalKey(Key.GridUsers, []);
   }
 
   return gridUsers;
-};
-
-const getSetDiff = (setA: Set<string>, setB: Set<string>): Set<string> => {
-  const diffSet = new Set<string>();
-
-  setA.forEach((el) => {
-    if (!setB.has(el)) {
-      diffSet.add(el);
-    }
-  });
-
-  return diffSet;
-};
-
-export const storeGridUsers = (newGridUsers: string[]) => {
-  const localGridUsers = new Set(getGridUsers());
-  const gridUsersSet = new Set(newGridUsers);
-
-  // TODO: update user status <status dots>
-  // const offlineUsers = getSetDiff(localGridUsers, gridUsersSet);
-  const newUsers = getSetDiff(gridUsersSet, localGridUsers);
-
-  newUsers.forEach((user) => {
-    localGridUsers.add(user);
-  });
-
-  const localGridUsersArray = [...localGridUsers];
-  updateLocalKey(Key.GridUsers, localGridUsersArray);
-
-  return localGridUsersArray;
 };
