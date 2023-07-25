@@ -24,7 +24,7 @@
       </Button>
     </div>
   </div>
-  <div class="grid overflow-auto max-h-[100dvh]">
+  <div class="grid overflow-auto max-h-[100dvh] pb-40">
     <div class="grid gap-4">
       {#each previousChats as username}
         <UserCard
@@ -47,7 +47,6 @@
         />
       {/each}
     </div>
-
     {#if !gridUsers.length}
       <div class="grid gap-4 justify-items-center">
         <img src={EmptyBox} alt="empty box" class="max-h-40" />
