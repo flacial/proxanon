@@ -32,7 +32,7 @@
 </script>
 
 <div class="grid grid-cols-[auto,1fr]">
-  <Navbar bind:activeNavItem />
+  <Navbar bind:activeNavItem bind:chattingWith />
   <div class="bg-[#262626] flex flex-col gap-6 max-h-[100dvh]">
     {#if activeNavItem === NavItemType.Chat}
       <Chat bind:gridUsers bind:chats bind:chattingWith />
