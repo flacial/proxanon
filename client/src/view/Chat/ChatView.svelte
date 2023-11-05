@@ -14,6 +14,7 @@
   let messageContent: string = ''
   let messagesListElement: HTMLUListElement
   let autoscroll: boolean
+  let inputFocused: boolean = false
 
   beforeUpdate(() => {
     autoscroll =
@@ -87,7 +88,7 @@
   onDestroy(() => socket.off('chat', handleChatEvent))
 </script>
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full bg-[#2B2B2B]">
   <div class="w-full p-3 bg-secondaryGray border-b-2 border-b-darkGray">
     <span class="font-display text-2xl text-gray">
       {chattingWith}
@@ -101,28 +102,35 @@
       <li>
         {#if message.owner === user.username}
           <li class="bg-[#3D271F] px-3 py-1">
-            <span class="font-display text-darkGray text-xs"
+            <span class="font-display text-darkGray text-xs md:text-base"
               >{parseUsername(user.username)}</span
             >
-            <p class="text-sm">{message.content}</p>
+            <p class="text-sm md:text-lg">{message.content}</p>
           </li>
         {:else}
           <li class="bg-secondaryGray px-3 py-1">
-            <span class="font-display text-darkGray text-xs">
+            <span class="font-display text-darkGray text-xs md:text-base">
               {parseUsername(chattingWith)}</span
             >
-            <p class="text-sm">{message.content}</p>
+            <p class="text-sm md:text-lg">{message.content}</p>
           </li>
         {/if}
       </li>
     {/each}
   </ul>
   <div class="mt-auto">
+    <hr
+      class="border-t-2 transition-all border-t-primary"
+      class:w-full={inputFocused}
+      class:w-0={!inputFocused}
+    />
     <input
-      class="w-full p-3 bg-secondaryGray outline-none text-sm placeholder:text-sm placeholder:text-ellipsis placeholder:h-full"
+      class="group w-full p-3 md:p-4 bg-secondaryGray outline-none text-sm md:text-lg md:placeholder:text-lg placeholder:text-sm placeholder:text-ellipsis placeholder:h-full"
       placeholder="Write a message..."
       bind:value={messageContent}
       on:keydown={sendMessage}
+      on:focus={() => (inputFocused = true)}
+      on:focusout={() => (inputFocused = false)}
     />
   </div>
 </div>

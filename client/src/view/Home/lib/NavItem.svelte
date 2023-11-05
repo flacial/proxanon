@@ -6,7 +6,7 @@
   export let onClick: () => void = () => {}
 </script>
 
-<div class="grid justify-items-center">
+<div class="grid justify-items-center md:scale-125">
   {#if withState}
     <div
       class="w-2 h-2 {active

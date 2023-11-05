@@ -9,44 +9,55 @@
   export let gridUsers: string[] = []
   export let chattingWith: string = ''
   const previousChats = Object.keys(getChats())
+  console.log(previousChats)
 </script>
 
 <div
-  class="grid {!gridUsers.length && !previousChats.length ? 'gap-24' : 'gap-6'}"
+  class="flex flex-col {!gridUsers.length && !previousChats.length
+    ? 'gap-24'
+    : 'gap-6'}"
 >
   <div>
     <div class="flex justify-between">
-      <span class="font-display text-2xl text-gray">Nearby Users</span>
+      <span class="font-display text-2xl sm:text-3xl text-gray"
+        >Nearby Users</span
+      >
       <Button
-        class="bg-purple-500 filter bg-opacity-20 rounded-full h-fit w-fit p-[3px]"
+        class="bg-purple-500 filter bg-opacity-20 rounded-full h-fit w-fit p-[3px] sm:scale-125"
       >
         <img src={HelpImage} alt="help" width="21" height="21" />
       </Button>
     </div>
   </div>
-  <div class="grid overflow-auto max-h-[100dvh] pb-40">
-    <div class="grid gap-4">
-      {#each previousChats as username}
-        <UserCard
-          username={parseUsername(username)}
-          onStartChat={() => (chattingWith = username)}
-        />
-      {/each}
-    </div>
+  <div class="overflow-auto max-h-[100dvh] pb-40">
+    {#if previousChats.length}
+      <div class="grid gap-4">
+        {#each previousChats as username}
+          <UserCard
+            username={parseUsername(username)}
+            onStartChat={() => (chattingWith = username)}
+            {chattingWith}
+          />
+        {/each}
+      </div>
+    {/if}
     {#if previousChats.length}
       <hr
         class="w-2/3 border-t-2 opacity-40 rounded-t rounded-b
    m-auto my-6 text-darkGray"
       />
     {/if}
-    <div class="grid gap-4">
-      {#each gridUsers as username}
-        <UserCard
-          username={parseUsername(username)}
-          onStartChat={() => (chattingWith = username)}
-        />
-      {/each}
-    </div>
+    {#if gridUsers.length}
+      <div class="grid gap-4">
+        {#each gridUsers as username}
+          <UserCard
+            username={parseUsername(username)}
+            onStartChat={() => (chattingWith = username)}
+            {chattingWith}
+          />
+        {/each}
+      </div>
+    {/if}
     {#if !gridUsers.length}
       <div class="grid gap-4 justify-items-center">
         <img src={EmptyBox} alt="empty box" class="max-h-40" />

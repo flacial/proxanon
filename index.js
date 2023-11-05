@@ -2,9 +2,9 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { handleSignin } from "./websocket/handlers/signin.handler.js";
-import { addUser, removeUser, getSocketId } from "./utils/userActions.js";
 import { grids } from "./state/index.js";
+import { addUser, getSocketId, removeUser } from "./utils/userActions.js";
+import { handleSignin } from "./websocket/handlers/signin.handler.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -21,6 +21,7 @@ app.get("/", (_, res) => {
 });
 
 io.on("connection", (socket) => {
+  console.log("a user connected");
   // hash is the geohash of the user's location
   let { hash, username } = socket.handshake.query;
 

@@ -8,6 +8,7 @@
 
   export let activeNavItem: NavItemType
   export let chattingWith: string
+  export let isLargeScreen: boolean
 
   const navItems = Object.freeze([
     {
@@ -33,9 +34,9 @@
   }
 </script>
 
-<nav class="min-h-screen bg-[#202020] w-max px-4 grid items-center">
-  <div class="grid gap-5">
-    {#if chattingWith}
+<nav class="min-h-screen bg-[#202020] w-max px-4 md:px-6 grid items-center">
+  <div class="grid gap-5 md:gap-10">
+    {#if chattingWith && !isLargeScreen}
       <div class="absolute top-14">
         <NavItem withState={false} imgSrc={BackImage} onClick={handleBack} />
       </div>
